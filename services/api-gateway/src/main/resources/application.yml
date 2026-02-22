@@ -1,0 +1,31 @@
+server:
+  port: 3000
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: catalog
+          uri: http://localhost:8082
+          predicates:
+            - Path=/catalog/**
+          filters:
+            - StripPrefix=1
+        - id: orders
+          uri: http://localhost:8083
+          predicates:
+            - Path=/orders/**
+          filters:
+            - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
