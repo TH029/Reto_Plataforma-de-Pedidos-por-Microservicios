@@ -1,0 +1,10 @@
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\AuthServiceApplication.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\controller\AuthController.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\dto\LoginRequest.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\dto\RegisterRequest.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\dto\TokenResponse.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\entity\UserEntity.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\repository\UserRepository.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\security\SecurityConfig.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\service\AuthService.java
+C:\Users\jorge\Desktop\PROYECTO-IS\Reto_Plataforma-de-Pedidos-por-Microservicios\services\auth-service\src\main\java\com\reto\auth\service\JwtService.java

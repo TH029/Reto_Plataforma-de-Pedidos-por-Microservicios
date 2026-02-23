@@ -1,0 +1,29 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authdb
+    username: reto
+    password: reto
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+security:
+  jwt:
+    secret: "CAMBIARESTACLAVESUPERLARGADE32CHARSMINIMO!!"
+    expiration-minutes: 15
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
