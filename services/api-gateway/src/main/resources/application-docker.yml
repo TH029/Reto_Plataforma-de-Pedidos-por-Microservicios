@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: http://auth-service:8081
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: catalog
+          uri: http://catalog-service:8082
+          predicates:
+            - Path=/catalog/**
+          filters:
+            - StripPrefix=1
+        - id: orders
+          uri: http://order-service:8083
+          predicates:
+            - Path=/orders/**
+          filters:
+            - StripPrefix=1

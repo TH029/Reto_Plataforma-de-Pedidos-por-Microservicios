@@ -6,6 +6,7 @@ import com.reto.auth.entity.UserEntity;
 import com.reto.auth.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.reto.auth.security.JwtService;
 
 @Service
 public class AuthService {
