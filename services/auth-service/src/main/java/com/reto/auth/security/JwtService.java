@@ -4,7 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import java.nio.charset.StandardCharsets;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
@@ -18,7 +18,7 @@ public class JwtService {
     private int expirationMinutes;
 
     public String generateToken(String email, String role) {
-        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         long expirationTime = System.currentTimeMillis() + (expirationMinutes * 60 * 1000);
 
         return Jwts.builder()

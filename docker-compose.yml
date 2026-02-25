@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   # ========= Databases (1 por service) =========
   auth-db:
