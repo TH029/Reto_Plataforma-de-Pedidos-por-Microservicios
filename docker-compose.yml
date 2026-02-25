@@ -27,5 +27,6 @@ services:
       - rabbitdata:/var/lib/rabbitmq
 
 volumes:
+  postgres_data:
   pgdata:
   rabbitdata:

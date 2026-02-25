@@ -4,7 +4,6 @@ import com.reto.auth.dto.LoginRequest;
 import com.reto.auth.dto.RegisterRequest;
 import com.reto.auth.entity.UserEntity;
 import com.reto.auth.repository.UserRepository;
-import com.reto.auth.security.JwtService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
