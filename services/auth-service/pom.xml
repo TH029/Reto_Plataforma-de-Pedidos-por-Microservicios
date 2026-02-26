@@ -75,7 +75,19 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- spring-boot-starter-oauth2-resource-serve: para que el servicio pueda proteger endpoints usando JWT. -->
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+		</dependency>
+
 	</dependencies>
+
+
+
+
 
 	<build>
 		<plugins>
