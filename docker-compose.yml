@@ -5,6 +5,8 @@ services:
   auth-db:
     image: postgres:16
     container_name: auth-db
+    ports:
+      - "5433:5432"
     restart: unless-stopped
     environment:
       POSTGRES_DB: authdb
@@ -17,6 +19,8 @@ services:
   catalog-db:
     image: postgres:16
     container_name: catalog-db
+    ports:
+      - "5434:5432"
     restart: unless-stopped
     environment:
       POSTGRES_DB: catalogdb
@@ -27,6 +31,8 @@ services:
 
   orders-db:
     image: postgres:16
+    ports:
+      - "5435:5432"
     container_name: orders-db
     restart: unless-stopped
     environment:
