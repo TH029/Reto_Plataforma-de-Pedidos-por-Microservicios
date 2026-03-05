@@ -7,6 +7,8 @@ import com.reto.auth.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping
 public class AuthController {
@@ -24,8 +26,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
-        String token = authService.login(request);
-        return ResponseEntity.ok(new TokenResponse(token));
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        try {
+            String token = authService.login(request);
+            return ResponseEntity.ok(new TokenResponse(token));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(Map.of("message", "Email o contraseña incorrectos"));
+        }
     }
 }
