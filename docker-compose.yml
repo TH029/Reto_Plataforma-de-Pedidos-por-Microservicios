@@ -70,6 +70,7 @@ services:
     depends_on:
       - auth-db
       - rabbitmq
+
     # No ports: only reachable via api-gateway
 
   catalog-service:
@@ -119,4 +120,5 @@ volumes:
   auth_pgdata:
   catalog_pgdata:
   orders_pgdata:
+
   rabbitdata:
