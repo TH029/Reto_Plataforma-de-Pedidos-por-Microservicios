@@ -22,6 +22,11 @@ public class AuthService {
     }
 
     public void register(RegisterRequest request) {
+        // Validar que el email no esté duplicado
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("El email ya está registrado");
+        }
+        
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         UserEntity user = new UserEntity(request.getEmail(), hashedPassword, request.getRole());
         userRepository.save(user);
