@@ -1,0 +1,508 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                                                                           ║
+║         🧪 TESTING CON DOCKER + POSTMAN + GIT COMMIT 🧪                 ║
+║                                                                           ║
+║              Guía paso a paso para probar todo                            ║
+║                                                                           ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PARTE 1: LEVANTAR DOCKER (PASO A PASO)
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─ PASO 1: Abre PowerShell / CMD
+│  Presiona: Win + R → escribe powershell → Enter
+
+┌─ PASO 2: Navega a la carpeta
+│  cd C:\Users\ADMIN\IdeaProjects\Reto_Plataforma-de-Pedidos-por-Microservicios
+
+┌─ PASO 3: Verifica Docker
+│  docker --version
+│  docker-compose --version
+
+┌─ PASO 4: Levanta todo
+│  docker-compose up -d
+│  
+│  Expected Output:
+│  Creating auth-db ... done
+│  Creating catalog-db ... done
+│  Creating orders-db ... done
+│  Creating rabbitmq ... done
+│  Creating auth-service ... done
+│  Creating catalog-service ... done
+│  Creating order-service ... done
+│  Creating api-gateway ... done
+
+┌─ PASO 5: ⏰ ESPERA 45 SEGUNDOS ⏰
+│  (Los servicios necesitan tiempo para iniciar)
+│  (Especialmente Order Service y Catalog Service)
+
+┌─ PASO 6: Verifica el estado
+│  docker-compose ps
+│  
+│  Expected Output:
+│  NAME              STATUS
+│  auth-db           Up 40 seconds
+│  catalog-db        Up 40 seconds
+│  orders-db         Up 40 seconds
+│  rabbitmq          Up 40 seconds
+│  auth-service      Up 35 seconds
+│  catalog-service   Up 35 seconds
+│  order-service     Up 35 seconds
+│  api-gateway       Up 30 seconds
+
+└─ PASO 7: Ver logs para confirmar
+   docker-compose logs -f order-service
+   
+   Busca esta línea:
+   order-service  | 2026-03-12 04:00:09.000 INFO ... Started OrderServiceApplication
+
+   Si la ves, ¡TODO ESTÁ LISTO! ✅
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PARTE 2: CONFIGURAR POSTMAN
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─ PASO 1: Descarga Postman
+│  https://www.postman.com/downloads/
+│  O usa la versión web
+
+┌─ PASO 2: Abre Postman
+
+┌─ PASO 3: Crear Environment
+│  Clic en Settings (engranaje) → Environments
+│  Clic en "Create Environment"
+│  Nombre: "Local Docker"
+│  
+│  Agregar variables:
+│  ┌─ VARIABLE 1
+│  │  Name: base_url
+│  │  Value: http://localhost:8080
+│  │
+│  ├─ VARIABLE 2
+│  │  Name: product_id
+│  │  Value: 1
+│  │
+│  └─ VARIABLE 3
+│     Name: order_id
+│     Value: 1
+│
+│  Clic en Save
+
+┌─ PASO 4: Selecciona el Environment
+│  En la esquina superior derecha de Postman
+│  Dropdown: Selecciona "Local Docker"
+
+└─ PASO 5: Crear Colección
+   Clic en "+" → New Collection
+   Nombre: "Order Service E-Commerce"
+   Clic en Create
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PARTE 3: CREAR LOS 5 REQUESTS EN POSTMAN
+═══════════════════════════════════════════════════════════════════════════════
+
+📮 REQUEST 1: Crear Producto (requisito previo)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD:     POST
+URL:        {{base_url}}/productos
+Header:     Content-Type: application/json
+
+JSON Body:
+{
+  "titulo": "Cien Años de Soledad",
+  "autor": "Gabriel García Márquez",
+  "isbn": "978-8439706755",
+  "categoria": "Novela",
+  "descripcion": "Una novela clásica de la literatura latinoamericana",
+  "precio": 50.00,
+  "stock": 10
+}
+
+✅ ENVÍA (Clic en Send)
+
+Expected Response (200 OK):
+{
+  "id": 1,
+  "titulo": "Cien Años de Soledad",
+  "precio": 50.00,
+  "stock": 10,
+  "activo": true
+}
+
+⚠️ COPIA EL ID DEL PRODUCTO (1)
+
+
+📮 REQUEST 2: Crear Pedido ⭐ (EL MÁS IMPORTANTE)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD:     POST
+URL:        {{base_url}}/pedidos
+Header:     Content-Type: application/json
+
+JSON Body:
+{
+  "usuarioId": 1,
+  "items": [
+    {
+      "productoId": 1,
+      "cantidad": 2
+    }
+  ]
+}
+
+✅ ENVÍA (Clic en Send)
+
+Expected Response (200 OK):
+{
+  "id": 1,
+  "usuarioId": 1,
+  "estado": "PENDING",
+  "total": 100.00,
+  "fechaCreacion": "2026-03-12T04:00:09Z",
+  "items": [
+    {
+      "id": 1,
+      "productoId": 1,
+      "productoNombre": "Cien Años de Soledad",
+      "cantidad": 2,
+      "precioUnitario": 50.00,
+      "subtotal": 100.00
+    }
+  ]
+}
+
+✅ VERIFICA:
+   • status: 200 OK ✅
+   • total: 100.00 (50 × 2) ✅
+   • estado: PENDING ✅
+
+⚠️ COPIA EL ID DEL PEDIDO (1)
+
+
+📮 REQUEST 3: Ver Detalles del Pedido
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD:     GET
+URL:        {{base_url}}/pedidos/1
+Header:     Content-Type: application/json
+Body:       (vacío)
+
+✅ ENVÍA (Clic en Send)
+
+Expected Response: El mismo pedido que en REQUEST 2
+
+
+📮 REQUEST 4: Listar Pedidos del Usuario
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD:     GET
+URL:        {{base_url}}/pedidos/usuario/1
+Header:     Content-Type: application/json
+Body:       (vacío)
+
+✅ ENVÍA (Clic en Send)
+
+Expected Response (Array):
+[
+  {
+    "id": 1,
+    "usuarioId": 1,
+    "estado": "PENDING",
+    "total": 100.00,
+    ...
+  }
+]
+
+✅ VERIFICA: Que el pedido está en la lista
+
+
+📮 REQUEST 5: Cambiar Estado a CONFIRMED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+METHOD:     PUT
+URL:        {{base_url}}/pedidos/1
+Header:     Content-Type: application/json
+
+JSON Body:
+{
+  "estado": "CONFIRMED"
+}
+
+✅ ENVÍA (Clic en Send)
+
+Expected Response (200 OK):
+{
+  "id": 1,
+  "usuarioId": 1,
+  "estado": "CONFIRMED",    ← Cambió aquí
+  "total": 100.00,
+  ...
+}
+
+✅ VERIFICA: estado cambió a CONFIRMED
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PARTE 4: PROBAR ERRORES (PARA VALIDAR LAS VALIDACIONES)
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ TEST 1: Stock Insuficiente
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Crea un REQUEST POST a /pedidos con:
+{
+  "usuarioId": 1,
+  "items": [
+    {
+      "productoId": 1,
+      "cantidad": 100   ← Solo hay 10 en stock!
+    }
+  ]
+}
+
+✅ ENVÍA
+
+Expected: Error 400 Bad Request
+{
+  "error": "Stock insuficiente",
+  "mensaje": "Stock insuficiente para producto 'Cien Años de Soledad'...",
+  "timestamp": "2026-03-12T04:00:09Z"
+}
+
+✅ VERIFICA: La validación funciona correctamente
+
+
+❌ TEST 2: Producto No Existe
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Crea un REQUEST POST a /pedidos con:
+{
+  "usuarioId": 1,
+  "items": [
+    {
+      "productoId": 9999,   ← No existe
+      "cantidad": 1
+    }
+  ]
+}
+
+✅ ENVÍA
+
+Expected: Error 404 Not Found
+{
+  "error": "Producto no encontrado",
+  "mensaje": "...",
+  "timestamp": "..."
+}
+
+✅ VERIFICA: La integración con Catalog funciona
+
+
+❌ TEST 3: Transición de Estado Inválida
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Crea un REQUEST PUT a /pedidos/1 con:
+{
+  "estado": "PENDING"    ← Ya está en CONFIRMED, no puede volver
+}
+
+✅ ENVÍA
+
+Expected: Error 400 Bad Request
+{
+  "error": "...",
+  "mensaje": "El pedido ya está en estado: PENDING",
+  "timestamp": "..."
+}
+
+✅ VERIFICA: Las transiciones de estado funcionan
+
+
+═══════════════════════════════════════════════════════════════════════════════
+PARTE 5: GIT COMMIT EN TU RAMA
+═══════════════════════════════════════════════════════════════════════════════
+
+Abre PowerShell / CMD nuevamente
+
+┌─ PASO 1: Ver el estado actual
+│  git status
+│  
+│  Deberías ver muchos archivos nuevos:
+│  - services/order-service/src/...
+│  - GUIA_ORDER_SERVICE.md
+│  - ARQUITECTURA_ORDER_SERVICE.md
+│  - etc.
+
+┌─ PASO 2: Crear tu rama (SI NO EXISTE)
+│  git branch -a    (ver todas las ramas)
+│  git checkout -b feature/order-service    (crear nueva rama)
+│  
+│  O si ya existe:
+│  git checkout feature/order-service
+
+┌─ PASO 3: Agregar todos los cambios
+│  git add .
+│  
+│  ✅ Esto agrega:
+│     - Order Service (18 archivos Java)
+│     - Documentación (6 archivos)
+│     - Scripts de testing
+
+┌─ PASO 4: Verificar qué se agregó
+│  git status
+│  
+│  Deberías ver: "Changes to be committed"
+
+┌─ PASO 5: Hacer el commit
+│  git commit -m "feat: Implementar Order Service completo
+│
+│  - Crear OrderEntity y OrderItemEntity con relación 1:N
+│  - Implementar OrderService con CRUD y validaciones
+│  - Crear OrderController con 4 endpoints REST
+│  - Integrar con Catalog Service via RestTemplate
+│  - Implementar GlobalExceptionHandler
+│  - Agregar validaciones de stock
+│  - Crear DTOs para request/response
+│  - Documentación completa
+│  - Tests con Postman y curl
+│
+│  Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"
+
+┌─ PASO 6: Verificar que el commit se creó
+│  git log --oneline -5
+│  
+│  Deberías ver tu commit en la lista
+
+┌─ PASO 7: Verificar la rama
+│  git branch
+│  
+│  Deberías ver:
+│  * feature/order-service    (← Tu rama, marcada con *)
+│    main
+
+└─ PASO 8: Ver detalles del commit
+   git show HEAD
+
+
+═══════════════════════════════════════════════════════════════════════════════
+CHECKLIST FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+DOCKER:
+  ☑ docker-compose ps muestra 8 contenedores UP
+  ☑ Esperaste 45 segundos
+  ☑ docker-compose logs muestra "Started OrderServiceApplication"
+
+POSTMAN:
+  ☑ Postman está instalado y abierto
+  ☑ Environment "Local Docker" creado con base_url
+  ☑ Colección "Order Service E-Commerce" creada
+  ☑ Creaste producto en Catalog (REQUEST 1)
+  ☑ Creaste pedido en Order Service (REQUEST 2) - Status 200
+  ☑ Viste detalles del pedido (REQUEST 3) - Status 200
+  ☑ Listaste pedidos del usuario (REQUEST 4) - Status 200
+  ☑ Cambiaste estado a CONFIRMED (REQUEST 5) - Status 200
+  ☑ Probaste error Stock Insuficiente - Status 400
+  ☑ Probaste error Producto No Existe - Status 404
+  ☑ Probaste error Transición Inválida - Status 400
+
+GIT COMMIT:
+  ☑ git status muestra cambios
+  ☑ git checkout -b feature/order-service (o cambiar a rama)
+  ☑ git add . (agregó los archivos)
+  ☑ git commit -m "..." (hizo el commit)
+  ☑ git log --oneline muestra tu commit
+  ☑ git branch muestra * feature/order-service
+
+
+═══════════════════════════════════════════════════════════════════════════════
+RESPUESTAS ESPERADAS
+═══════════════════════════════════════════════════════════════════════════════
+
+Todos los status 200:
+├─ POST /pedidos ..................... 200 OK ✅
+├─ GET /pedidos/{id} ................ 200 OK ✅
+├─ GET /pedidos/usuario/{id} ........ 200 OK ✅
+└─ PUT /pedidos/{id} ................ 200 OK ✅
+
+Todos los errores esperados:
+├─ Stock insuficiente ............... 400 Bad Request ✅
+├─ Producto no existe ............... 404 Not Found ✅
+└─ Transición inválida .............. 400 Bad Request ✅
+
+Commit en git:
+└─ Tu rama: feature/order-service ✅
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SI ALGO FALLA
+═══════════════════════════════════════════════════════════════════════════════
+
+❌ "Connection refused" en Postman
+   └─ Espera más tiempo (45 segundos)
+   └─ Ver logs: docker-compose logs order-service
+
+❌ "Stock insuficiente" en REQUEST 2
+   └─ El producto debe tener stock >= cantidad
+   └─ En REQUEST 1 pusimos stock: 10, cantidad: 2 → OK
+
+❌ "Producto no encontrado" en REQUEST 2
+   └─ Verifica que el productoId es correcto
+   └─ Debe ser el ID que retornó REQUEST 1
+
+❌ Git error "Already on branch feature/order-service"
+   └─ Ya estás en la rama, procede con git add .
+
+❌ Git error "fatal: not a git repository"
+   └─ Asegúrate de estar en la carpeta correcta:
+      C:\Users\ADMIN\IdeaProjects\Reto_Plataforma-de-Pedidos-por-Microservicios
+
+
+═══════════════════════════════════════════════════════════════════════════════
+REFERENCIAS RÁPIDAS
+═══════════════════════════════════════════════════════════════════════════════
+
+Documentación disponible:
+├─ TESTING_Y_COMMIT.md ............ Este archivo (detalladísimo)
+├─ GUIA_ORDER_SERVICE.md ......... Ejemplos y casos de uso
+├─ QUICKSTART.md ................. Inicio rápido
+├─ DIAGRAMAS_VISUALES.md ......... Diagramas visuales
+└─ COMPLETADO.txt ................ Resumen final
+
+Comandos Docker:
+├─ docker-compose up -d ......... Levantar todo
+├─ docker-compose ps ............ Ver estado
+├─ docker-compose logs -f service ... Ver logs en vivo
+├─ docker-compose down .......... Detener todo
+└─ docker-compose restart ....... Reiniciar
+
+Comandos Git:
+├─ git status ................... Ver cambios
+├─ git checkout -b feature/nombre ... Crear rama
+├─ git add . .................... Agregar cambios
+├─ git commit -m "..." .......... Hacer commit
+├─ git log --oneline ............ Ver historial
+└─ git branch ................... Ver ramas
+
+
+═══════════════════════════════════════════════════════════════════════════════
+¡ÉXITO! 🎉
+═══════════════════════════════════════════════════════════════════════════════
+
+Si completaste todo este checklist:
+
+✅ Docker está corriendo
+✅ Postman está testeando
+✅ Git está commiteado
+✅ Tu rama: feature/order-service
+
+¡FELICIDADES! Tu Order Service está probado y guardado en git.
+
+Próximo paso: Hacer un Pull Request para mergear a main (si lo deseas)
+
+═══════════════════════════════════════════════════════════════════════════════
