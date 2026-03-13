@@ -1,0 +1,17 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:postgresql://orders-db:5432/ordersdb
+    username: reto
+    password: reto
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
