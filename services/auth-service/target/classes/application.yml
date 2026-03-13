@@ -20,7 +20,7 @@ spring:
 security:
   jwt:
     secret: "CAMBIARESTACLAVESUPERLARGADE32CHARSMINIMO!!"
-    expiration-minutes: 15
+    expiration-minutes: 5
 
 management:
   endpoints:

@@ -11,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 public class CatalogServiceClient {
 
     private final RestTemplate restTemplate;
-    private static final String CATALOG_SERVICE_URL = "http://catalog-service:8082/productos";
+
+    @org.springframework.beans.factory.annotation.Value("${spring.external.catalog.url:http://catalog-service:8082/productos}")
+    private String catalogServiceUrl;
 
     public CatalogServiceClient(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -26,7 +28,7 @@ public class CatalogServiceClient {
     public CatalogProductDTO obtenerProducto(Long productoId) {
         try {
             CatalogProductDTO producto = restTemplate.getForObject(
-                    CATALOG_SERVICE_URL + "/{id}",
+                    catalogServiceUrl + "/{id}",
                     CatalogProductDTO.class,
                     productoId
             );
