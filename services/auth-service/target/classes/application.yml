@@ -21,6 +21,8 @@ security:
   jwt:
     secret: "CAMBIARESTACLAVESUPERLARGADE32CHARSMINIMO!!"
     expiration-minutes: 15
+    refresh-token:
+      expiration-minutes: 60
 
 management:
   endpoints:
