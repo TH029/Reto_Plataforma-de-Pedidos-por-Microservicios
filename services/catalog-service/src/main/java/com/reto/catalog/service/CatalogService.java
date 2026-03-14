@@ -1,5 +1,6 @@
 package com.reto.catalog.service;
 
+import com.reto.catalog.dto.StockCheckResponse;
 import com.reto.catalog.entity.CatalogEntity;
 import com.reto.catalog.repository.CatalogRepository;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,18 @@ public class CatalogService {
         CatalogEntity catalog = buscarPorId(id);
         catalog.setActivo(false);
         catalogRepository.save(catalog);
+    }
+
+    // Validar stock
+    public StockCheckResponse checkStock(Long id, Integer cantidad) {
+        CatalogEntity producto = buscarPorId(id);
+        boolean disponible = producto.getStock() != null && producto.getStock() >= cantidad;
+
+        return new StockCheckResponse(
+                producto.getId(),
+                cantidad,
+                producto.getStock(),
+                disponible
+        );
     }
 }

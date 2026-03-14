@@ -17,8 +17,11 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> crearPedido(@RequestBody CreateOrderRequest request) {
-        OrderResponse response = orderService.crearPedido(request);
+    public ResponseEntity<OrderResponse> crearPedido(
+            @RequestBody CreateOrderRequest request,
+            @RequestHeader(value = "CorrelationId", required = false) String correlationId) {
+
+        OrderResponse response = orderService.crearPedido(request, correlationId);
         return ResponseEntity.ok(response);
     }
 }

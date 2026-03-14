@@ -9,7 +9,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+catalog:
+  service:
+    url: http://catalog-service:8082
 management:
   endpoints:
     web:
