@@ -1,63 +1,40 @@
 package com.reto.order.entity;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "orders")
-public class OrderEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class OrderResponse {
     private Long id;
-
-    @Column(nullable = false)
     private Long usuarioId;
-
-    @Column(nullable = false)
     private String estado;
-
-    @Column(nullable = false)
     private BigDecimal total;
-
-    @Column(nullable = false)
     private LocalDateTime fechaCreacion;
-
-    @Column(nullable = false)
     private LocalDateTime fechaActualizacion;
-
-    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItemEntity> items = new ArrayList<>();
+    private List<OrderItemResponse> items;
 
     // Constructores
-    public OrderEntity() {}
+    public OrderResponse() {}
 
-    public OrderEntity(Long usuarioId, String estado, BigDecimal total) {
+    public OrderResponse(Long id, Long usuarioId, String estado, BigDecimal total,
+                        LocalDateTime fechaCreacion, LocalDateTime fechaActualizacion,
+                        List<OrderItemResponse> items) {
+        this.id = id;
         this.usuarioId = usuarioId;
         this.estado = estado;
         this.total = total;
-        this.fechaCreacion = LocalDateTime.now();
-        this.fechaActualizacion = LocalDateTime.now();
-    }
-
-    // Métodos automáticos
-    @PrePersist
-    public void prePersist() {
-        this.fechaCreacion = LocalDateTime.now();
-        this.fechaActualizacion = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        this.fechaActualizacion = LocalDateTime.now();
+        this.fechaCreacion = fechaCreacion;
+        this.fechaActualizacion = fechaActualizacion;
+        this.items = items;
     }
 
     // Getters y Setters
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUsuarioId() {
@@ -88,15 +65,23 @@ public class OrderEntity {
         return fechaCreacion;
     }
 
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public LocalDateTime getFechaActualizacion() {
         return fechaActualizacion;
     }
 
-    public List<OrderItemEntity> getItems() {
+    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public List<OrderItemResponse> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItemEntity> items) {
+    public void setItems(List<OrderItemResponse> items) {
         this.items = items;
     }
 }

@@ -2,6 +2,8 @@ server:
   port: 8083
 
 spring:
+  application:
+    name: order-service
   datasource:
     url: jdbc:postgresql://orders-db:5432/ordersdb
     username: reto
@@ -9,6 +11,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    show-sql: false
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: reto
+    password: reto
 
 management:
   endpoints:

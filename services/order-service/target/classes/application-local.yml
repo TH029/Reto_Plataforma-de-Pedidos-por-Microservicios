@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5439/ordersdb
+    username: reto
+    password: reto
+  rabbitmq:
+    host: localhost
+    port: 5672
+  external:
+    catalog:
+      url: http://localhost:8080/catalog/productos
