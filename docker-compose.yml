@@ -39,6 +39,9 @@ services:
       POSTGRES_DB: ordersdb
       POSTGRES_USER: reto
       POSTGRES_PASSWORD: reto
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5439:5432"
     volumes:
       - orders_pgdata:/var/lib/postgresql/data
 
@@ -114,7 +117,6 @@ services:
     depends_on:
       - auth-service
       - catalog-service
-      - order-service
 
 volumes:
   auth_pgdata:
