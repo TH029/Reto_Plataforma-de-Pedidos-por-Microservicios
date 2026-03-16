@@ -1,5 +1,6 @@
 package com.reto.catalog.controller;
 
+import com.reto.catalog.dto.StockCheckResponse;
 import com.reto.catalog.entity.CatalogEntity;
 import com.reto.catalog.service.CatalogService;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +49,16 @@ public class CatalogController {
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         catalogService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // GET /catalog/productos/{id}/check-stock?cantidad=2
+    @GetMapping("/{id}/check-stock")
+    public ResponseEntity<StockCheckResponse> checkStock(
+            @PathVariable Long id,
+            @RequestParam Integer cantidad,
+            @RequestHeader(value = "CorrelationId", required = false) String correlationId) {
+
+        System.out.println("CorrelationId recibido en catalog-service: " + correlationId);
+        return ResponseEntity.ok(catalogService.checkStock(id, cantidad));
     }
 }

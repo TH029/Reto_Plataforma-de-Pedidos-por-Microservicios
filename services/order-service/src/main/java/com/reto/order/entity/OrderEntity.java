@@ -1,10 +1,7 @@
 package com.reto.order.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -15,88 +12,58 @@ public class OrderEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long usuarioId;
+    private Long productId;
 
     @Column(nullable = false)
-    private String estado;
+    private Integer cantidad;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private BigDecimal total;
+    private OrderStatus estado;
 
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
 
-    @Column(nullable = false)
-    private LocalDateTime fechaActualizacion;
-
-    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItemEntity> items = new ArrayList<>();
-
-    // Constructores
-    public OrderEntity() {}
-
-    public OrderEntity(Long usuarioId, String estado, BigDecimal total) {
-        this.usuarioId = usuarioId;
-        this.estado = estado;
-        this.total = total;
-        this.fechaCreacion = LocalDateTime.now();
-        this.fechaActualizacion = LocalDateTime.now();
-    }
-
-    // Métodos automáticos
     @PrePersist
     public void prePersist() {
         this.fechaCreacion = LocalDateTime.now();
-        this.fechaActualizacion = LocalDateTime.now();
+        if (this.estado == null) {
+            this.estado = OrderStatus.CREATED;
+        }
     }
 
-    @PreUpdate
-    public void preUpdate() {
-        this.fechaActualizacion = LocalDateTime.now();
+    public OrderEntity() {
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
 
-    public Long getUsuarioId() {
-        return usuarioId;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setUsuarioId(Long usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public String getEstado() {
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public OrderStatus getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(OrderStatus estado) {
         this.estado = estado;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
     }
 
     public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
-    }
-
-    public LocalDateTime getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public List<OrderItemEntity> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrderItemEntity> items) {
-        this.items = items;
     }
 }

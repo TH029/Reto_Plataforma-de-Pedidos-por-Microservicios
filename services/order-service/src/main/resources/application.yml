@@ -11,6 +11,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+catalog:
+  service:
+    url: http://catalog-service:8082
     show-sql: false
   rabbitmq:
     host: rabbitmq
