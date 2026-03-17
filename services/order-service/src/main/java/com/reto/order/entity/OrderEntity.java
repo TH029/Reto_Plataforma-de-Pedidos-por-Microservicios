@@ -14,6 +14,9 @@ public class OrderEntity {
     @Column(nullable = false)
     private Long productId;
 
+    @Column(nullable = true)
+    private Long usuarioId;
+
     @Column(nullable = false)
     private Integer cantidad;
 
@@ -24,12 +27,20 @@ public class OrderEntity {
     @Column(nullable = false)
     private LocalDateTime fechaCreacion;
 
+    @Column
+    private LocalDateTime fechaActualizacion;
+
     @PrePersist
     public void prePersist() {
         this.fechaCreacion = LocalDateTime.now();
         if (this.estado == null) {
             this.estado = OrderStatus.CREATED;
         }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
     }
 
     public OrderEntity() {
@@ -45,6 +56,14 @@ public class OrderEntity {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Long getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
     public Integer getCantidad() {

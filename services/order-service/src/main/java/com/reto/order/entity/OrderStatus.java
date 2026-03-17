@@ -1,5 +1,11 @@
 package com.reto.order.entity;
 
 public enum OrderStatus {
-    CREATED
+    PENDIENTE,
+    PROCESANDO,
+    ENVIADO,
+    ENTREGADO,
+    CANCELADO,
+    COMPLETADO,
+    CREATED // Mantener por compatibilidad actual
 }

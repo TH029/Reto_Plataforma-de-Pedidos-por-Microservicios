@@ -1,1 +1,4 @@
-C:\Users\jorge\Documents\reto-microservicios\services\api-gateway\src\main\java\com\reto\gateway\ApiGatewayApplication.java
+C:\Users\jorge\Desktop\Repositorio_Completo\Reto_Plataforma-de-Pedidos-por-Microservicios\services\api-gateway\src\main\java\com\reto\gateway\security\SecurityConfig.java
+C:\Users\jorge\Desktop\Repositorio_Completo\Reto_Plataforma-de-Pedidos-por-Microservicios\services\api-gateway\src\main\java\com\reto\gateway\security\JwtAuthenticationEntryPoint.java
+C:\Users\jorge\Desktop\Repositorio_Completo\Reto_Plataforma-de-Pedidos-por-Microservicios\services\api-gateway\src\main\java\com\reto\gateway\ApiGatewayApplication.java
+C:\Users\jorge\Desktop\Repositorio_Completo\Reto_Plataforma-de-Pedidos-por-Microservicios\services\api-gateway\src\main\java\com\reto\gateway\security\JwtAccessDeniedHandler.java

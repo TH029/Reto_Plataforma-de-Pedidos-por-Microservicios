@@ -5,18 +5,21 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:postgresql://orders-db:5432/ordersdb
-    username: reto
-    password: reto
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://orders-db:5432/ordersdb}
+    username: ${SPRING_DATASOURCE_USERNAME:reto}
+    password: ${SPRING_DATASOURCE_PASSWORD:reto}
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
   rabbitmq:
-    host: rabbitmq
-    port: 5672
-    username: reto
-    password: reto
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:reto}
+    password: ${RABBITMQ_PASSWORD:reto}
+catalog:
+  service:
+    url: ${CATALOG_SERVICE_URL:http://catalog-service:8082}
+    show-sql: false
 
 management:
   endpoints:

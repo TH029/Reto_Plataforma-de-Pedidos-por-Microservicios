@@ -31,8 +31,6 @@ services:
 
   orders-db:
     image: postgres:16
-    ports:
-      - "5435:5432"
     container_name: orders-db
     restart: unless-stopped
     environment:

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderResponse {
+class OrderResponse {
     private Long id;
     private Long usuarioId;
     private String estado;
