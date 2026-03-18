@@ -77,4 +77,13 @@ public class CatalogService {
             throw new RuntimeException("No hay stock suficiente para descontar " + cantidad + " del producto " + id);
         }
     }
+
+    // Restaurar stock (llamado asíncronamente por RabbitMQ en cancelación)
+    public void restaurarStock(Long id, Integer cantidad) {
+        CatalogEntity producto = buscarPorId(id);
+        if (producto.getStock() != null) {
+            producto.setStock(producto.getStock() + cantidad);
+            catalogRepository.save(producto);
+        }
+    }
 }

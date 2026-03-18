@@ -11,10 +11,16 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     public static final String QUEUE_STOCK = "stock.update.queue";
+    public static final String QUEUE_RESTORE = "stock.restore.queue";
 
     @Bean
     public Queue stockQueue() {
         return new Queue(QUEUE_STOCK, true);
+    }
+
+    @Bean
+    public Queue restoreQueue() {
+        return new Queue(QUEUE_RESTORE, true);
     }
 
     @Bean

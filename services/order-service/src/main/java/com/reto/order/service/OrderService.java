@@ -3,6 +3,7 @@ import com.reto.order.client.CatalogClient;
 import com.reto.order.config.RabbitMQConfig;
 import com.reto.order.dto.CreateOrderRequest;
 import com.reto.order.dto.OrderCreatedEvent;
+import com.reto.order.dto.OrderCancelledEvent;
 import com.reto.order.dto.OrderResponse;
 import com.reto.order.dto.StockCheckResponse;
 import com.reto.order.entity.OrderEntity;
@@ -89,6 +90,14 @@ public class OrderService {
 
         order.setEstado(OrderStatus.CANCELADO);
         OrderEntity updatedOrder = orderRepository.save(order);
+
+        // Publicar evento en RabbitMQ para restaurar stock de forma asíncrona
+        System.out.println("Enviando evento a RabbitMQ para restaurar stock del producto: " + updatedOrder.getProductId());
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.ROUTING_KEY_RESTORE,
+                new OrderCancelledEvent(updatedOrder.getProductId(), updatedOrder.getCantidad())
+        );
 
         return mapToResponse(updatedOrder);
     }
