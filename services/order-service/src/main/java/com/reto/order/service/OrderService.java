@@ -12,6 +12,9 @@ import com.reto.order.repository.OrderRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
@@ -60,6 +63,29 @@ public class OrderService {
                 savedOrder.getUsuarioId(),
                 savedOrder.getEstado(),
                 savedOrder.getFechaCreacion()
+        );
+    }
+
+    public List<OrderResponse> obtenerTodos() {
+        return orderRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public OrderResponse obtenerPorId(Long id) {
+        OrderEntity order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+        return mapToResponse(order);
+    }
+
+    private OrderResponse mapToResponse(OrderEntity order) {
+        return new OrderResponse(
+                order.getId(),
+                order.getProductId(),
+                order.getCantidad(),
+                order.getUsuarioId(),
+                order.getEstado(),
+                order.getFechaCreacion()
         );
     }
 }

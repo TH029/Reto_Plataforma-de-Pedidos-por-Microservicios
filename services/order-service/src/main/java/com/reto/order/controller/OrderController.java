@@ -6,6 +6,8 @@ import com.reto.order.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/pedidos")
 public class OrderController {
@@ -23,5 +25,15 @@ public class OrderController {
 
         OrderResponse response = orderService.crearPedido(request, correlationId);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> obtenerTodos() {
+        return ResponseEntity.ok(orderService.obtenerTodos());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponse> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.obtenerPorId(id));
     }
 }
