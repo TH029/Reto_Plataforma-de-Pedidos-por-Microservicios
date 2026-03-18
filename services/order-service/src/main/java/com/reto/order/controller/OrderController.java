@@ -36,4 +36,9 @@ public class OrderController {
     public ResponseEntity<OrderResponse> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.obtenerPorId(id));
     }
+
+    @PutMapping("/{id}/cancelar")
+    public ResponseEntity<OrderResponse> cancelarPedido(@PathVariable Long id) {
+        return ResponseEntity.ok(orderService.cancelarPedido(id));
+    }
 }

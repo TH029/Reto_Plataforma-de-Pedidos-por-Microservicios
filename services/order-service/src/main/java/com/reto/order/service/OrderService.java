@@ -78,6 +78,21 @@ public class OrderService {
         return mapToResponse(order);
     }
 
+    public OrderResponse cancelarPedido(Long id) {
+        OrderEntity order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+
+        // Regla: Solo cancelar si está CREATED o PENDIENTE
+        if (order.getEstado() != OrderStatus.CREATED && order.getEstado() != OrderStatus.PENDIENTE) {
+            throw new RuntimeException("No se puede cancelar el pedido porque ya está en estado: " + order.getEstado());
+        }
+
+        order.setEstado(OrderStatus.CANCELADO);
+        OrderEntity updatedOrder = orderRepository.save(order);
+
+        return mapToResponse(updatedOrder);
+    }
+
     private OrderResponse mapToResponse(OrderEntity order) {
         return new OrderResponse(
                 order.getId(),
