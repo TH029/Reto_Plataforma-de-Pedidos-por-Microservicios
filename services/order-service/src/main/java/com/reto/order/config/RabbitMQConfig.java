@@ -15,6 +15,9 @@ public class RabbitMQConfig {
     public static final String QUEUE_STOCK = "stock.update.queue";
     public static final String ROUTING_KEY_STOCK = "stock.update.key";
 
+    public static final String QUEUE_RESTORE = "stock.restore.queue";
+    public static final String ROUTING_KEY_RESTORE = "stock.restore.key";
+
     @Bean
     public DirectExchange exchange() {
         return new DirectExchange(EXCHANGE);
@@ -28,6 +31,16 @@ public class RabbitMQConfig {
     @Bean
     public Binding binding(Queue stockQueue, DirectExchange exchange) {
         return BindingBuilder.bind(stockQueue).to(exchange).with(ROUTING_KEY_STOCK);
+    }
+
+    @Bean
+    public Queue restoreQueue() {
+        return new Queue(QUEUE_RESTORE, true);
+    }
+
+    @Bean
+    public Binding restoreBinding(Queue restoreQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(restoreQueue).to(exchange).with(ROUTING_KEY_RESTORE);
     }
 
     @Bean

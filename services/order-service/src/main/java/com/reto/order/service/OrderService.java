@@ -3,6 +3,7 @@ import com.reto.order.client.CatalogClient;
 import com.reto.order.config.RabbitMQConfig;
 import com.reto.order.dto.CreateOrderRequest;
 import com.reto.order.dto.OrderCreatedEvent;
+import com.reto.order.dto.OrderCancelledEvent;
 import com.reto.order.dto.OrderResponse;
 import com.reto.order.dto.StockCheckResponse;
 import com.reto.order.entity.OrderEntity;
@@ -11,6 +12,9 @@ import com.reto.order.exception.InsufficientStockException;
 import com.reto.order.repository.OrderRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -60,6 +64,52 @@ public class OrderService {
                 savedOrder.getUsuarioId(),
                 savedOrder.getEstado(),
                 savedOrder.getFechaCreacion()
+        );
+    }
+
+    public List<OrderResponse> obtenerTodos() {
+        return orderRepository.findAll().stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public OrderResponse obtenerPorId(Long id) {
+        OrderEntity order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+        return mapToResponse(order);
+    }
+
+    public OrderResponse cancelarPedido(Long id) {
+        OrderEntity order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+
+        // Regla: Solo cancelar si está CREATED o PENDIENTE
+        if (order.getEstado() != OrderStatus.CREATED && order.getEstado() != OrderStatus.PENDIENTE) {
+            throw new RuntimeException("No se puede cancelar el pedido porque ya está en estado: " + order.getEstado());
+        }
+
+        order.setEstado(OrderStatus.CANCELADO);
+        OrderEntity updatedOrder = orderRepository.save(order);
+
+        // Publicar evento en RabbitMQ para restaurar stock de forma asíncrona
+        System.out.println("Enviando evento a RabbitMQ para restaurar stock del producto: " + updatedOrder.getProductId());
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.ROUTING_KEY_RESTORE,
+                new OrderCancelledEvent(updatedOrder.getProductId(), updatedOrder.getCantidad())
+        );
+
+        return mapToResponse(updatedOrder);
+    }
+
+    private OrderResponse mapToResponse(OrderEntity order) {
+        return new OrderResponse(
+                order.getId(),
+                order.getProductId(),
+                order.getCantidad(),
+                order.getUsuarioId(),
+                order.getEstado(),
+                order.getFechaCreacion()
         );
     }
 }
